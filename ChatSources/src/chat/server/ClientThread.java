@@ -10,7 +10,7 @@ public class ClientThread implements Runnable {
     private PrintWriter clientOut;
     private ChatServer server;
 
-    public ClientThread(ChatServer server, Socket socket){
+    ClientThread(ChatServer server, Socket socket){
         this.server = server;
         this.socket = socket;
     }

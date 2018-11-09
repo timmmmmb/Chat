@@ -8,17 +8,16 @@ import java.util.Scanner;
 public class ServerThread implements Runnable {
     private Socket socket;
     private String userName;
-    private boolean isAlived;
     private final LinkedList<String> messagesToSend;
     private boolean hasMessages = false;
 
-    public ServerThread(Socket socket, String userName){
+    ServerThread(Socket socket, String userName){
         this.socket = socket;
         this.userName = userName;
-        messagesToSend = new LinkedList<String>();
+        messagesToSend = new LinkedList<>();
     }
 
-    public void addNextMessage(String message){
+    void addNextMessage(String message){
         synchronized (messagesToSend){
             hasMessages = true;
             messagesToSend.push(message);
@@ -46,7 +45,7 @@ public class ServerThread implements Runnable {
                     }
                 }
                 if(hasMessages){
-                    String nextSend = "";
+                    String nextSend;
                     synchronized(messagesToSend){
                         nextSend = messagesToSend.pop();
                         hasMessages = !messagesToSend.isEmpty();

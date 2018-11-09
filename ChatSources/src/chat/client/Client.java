@@ -12,7 +12,6 @@ public class Client {
     private String userName;
     private String serverHost;
     private int serverPort;
-    private Scanner userInputScanner;
 
     public static void main(String[] args){
         String readName = null;

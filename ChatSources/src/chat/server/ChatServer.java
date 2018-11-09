@@ -11,24 +11,24 @@ public class ChatServer {
     private static final int portNumber = 4444;
 
     private int serverPort;
-    private List<ClientThread> clients; // or "protected static List<ClientThread> clients;"
+    private List<ClientThread> clients;
 
     public static void main(String[] args){
         ChatServer server = new ChatServer(portNumber);
         server.startServer();
     }
 
-    public ChatServer(int portNumber){
+    private ChatServer(int portNumber){
         this.serverPort = portNumber;
     }
 
-    public List<ClientThread> getClients(){
+    List<ClientThread> getClients(){
         return clients;
     }
 
     private void startServer(){
-        clients = new ArrayList<ClientThread>();
-        ServerSocket serverSocket = null;
+        clients = new ArrayList<>();
+        ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket(serverPort);
             acceptClients(serverSocket);
