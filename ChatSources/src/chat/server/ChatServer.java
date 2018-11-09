@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ChatServer {
 
-    private static final int portNumber = 8080;
+    private static final int portNumber = 4444;
 
     private int serverPort;
     private List<ClientThread> clients;
