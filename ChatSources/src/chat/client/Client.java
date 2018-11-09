@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Client {
 
-    private static final String host = "localhost";
+    private static final String host = "192.168.56.1";
     private static final int portNumber = 4444;
 
     private String userName;
@@ -16,6 +16,7 @@ public class Client {
     public static void main(String[] args){
         String readName = null;
         Scanner scan = new Scanner(System.in);
+        //TODO: add a gui where you can enter your name
         System.out.println("Please input username:");
         while(readName == null || readName.trim().equals("")){
             // null, empty, whitespace(s) not allowed.
@@ -40,6 +41,7 @@ public class Client {
             Socket socket = new Socket(serverHost, serverPort);
             Thread.sleep(1000); // waiting for network communicating.
 
+            //TODO: switch the panel to the chat layout
             ServerThread serverThread = new ServerThread(socket, userName);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
@@ -47,12 +49,6 @@ public class Client {
                 if(scan.hasNextLine()){
                     serverThread.addNextMessage(scan.nextLine());
                 }
-                // NOTE: scan.hasNextLine waits input (in the other words block this thread's process).
-                // NOTE: If you use buffered reader or something else not waiting way,
-                // NOTE: I recommends write waiting short time like following.
-                // else {
-                //    Thread.sleep(200);
-                // }
             }
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
