@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ChatServer {
     private static ServerSocket serverSocket = null;
     private static int portNumber = 4444;
-    private static ArrayList<ClientThread> clients;
+    protected static ArrayList<ClientThread> clients;
 
     public static void main(String[] args){
         try{
