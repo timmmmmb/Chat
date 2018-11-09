@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Client {
 
     private static final String host = "192.168.56.1";
-    private static final int portNumber = 4444;
+    private static final int portNumber = 8080;
 
     private String userName;
     private String serverHost;
@@ -39,6 +39,7 @@ public class Client {
     private void startClient(Scanner scan){
         try{
             Socket socket = new Socket(serverHost, serverPort);
+            System.out.println("Trying to connect to: "+serverHost+":"+serverPort);
             Thread.sleep(1000); // waiting for network communicating.
 
             //TODO: switch the panel to the chat layout

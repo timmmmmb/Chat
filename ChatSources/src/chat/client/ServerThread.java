@@ -26,10 +26,9 @@ public class ServerThread implements Runnable {
 
     @Override
     public void run(){
-        System.out.println("Welcome :" + userName);
-
-        System.out.println("Local Port :" + socket.getLocalPort());
-        System.out.println("Server = " + socket.getRemoteSocketAddress() + ":" + socket.getPort());
+        System.out.println("Welcome: " + userName);
+        System.out.println("Local Port:" + socket.getLocalPort());
+        System.out.println("Server:" + socket.getRemoteSocketAddress());
 
         try{
             PrintWriter serverOut = new PrintWriter(socket.getOutputStream(), false);
