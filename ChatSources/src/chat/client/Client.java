@@ -1,39 +1,28 @@
 package chat.client;
 
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
-
-    private static final String host = "192.168.56.1";
-    private static final int portNumber = 8080;
+public class Client extends Application {
 
     private String userName;
     private String serverHost;
     private int serverPort;
 
     public static void main(String[] args){
-        String readName = null;
-        Scanner scan = new Scanner(System.in);
-        //TODO: add a gui where you can enter your name
-        System.out.println("Please input username:");
-        while(readName == null || readName.trim().equals("")){
-            // null, empty, whitespace(s) not allowed.
-            readName = scan.nextLine();
-            if(readName.trim().equals("")){
-                System.out.println("Invalid. Please enter again:");
-            }
-        }
-
-        Client client = new Client(readName, host, portNumber);
-        client.startClient(scan);
-    }
-
-    private Client(String userName, String host, int portNumber){
-        this.userName = userName;
-        this.serverHost = host;
-        this.serverPort = portNumber;
+        launch(args);
     }
 
     private void startClient(Scanner scan){
@@ -57,5 +46,44 @@ public class Client {
         }catch(InterruptedException ex){
             System.out.println("Interrupted");
         }
+    }
+
+    @Override
+    public void start(Stage primaryStage){
+        Scanner scan = new Scanner(System.in);
+        VBox loginVBox = new VBox();
+        loginVBox.setSpacing(5);
+        loginVBox.setPadding(new Insets(10, 50, 50, 50));
+        TextField nameField = new TextField("");
+        Label nameLabel = new Label("Name: ");
+        nameLabel.setMinWidth(100);
+        HBox nameBox = new HBox(nameLabel,nameField);
+        TextField ipField = new TextField("");
+        Label ipLabel = new Label("IP-Adress: ");
+        ipLabel.setMinWidth(100);
+        HBox ipBox = new HBox(ipLabel,ipField);
+        TextField portField = new TextField("");
+        Label portLabel = new Label("Port: ");
+        portLabel.setMinWidth(100);
+        HBox portBox = new HBox(portLabel,portField);
+
+        Button connect = new Button("Connect");
+        Label error = new Label();
+        error.setTextFill(Color.web("#FF0000"));
+        connect.setOnAction(event -> {
+            if("".equals(nameField.getText())||"".equals(ipField.getText())||"".equals(portField.getText())){
+                error.setText("Please fill out all textfields");
+            }else{
+                this.userName = nameField.getText();
+                this.serverHost = ipField.getText();
+                this.serverPort = Integer.parseInt(portField.getText());
+                startClient(scan);
+            }
+        });
+        loginVBox.getChildren().addAll(nameBox,ipBox,portBox,connect,error);
+        Scene connectScene = new Scene(loginVBox,400,400);
+        primaryStage.setTitle("Chat Client");
+        primaryStage.setScene(connectScene);
+        primaryStage.show();
     }
 }
