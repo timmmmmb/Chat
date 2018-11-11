@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +21,7 @@ public class Client extends Application {
     private String userName;
     private String serverHost;
     private int serverPort;
+    private Stage stage;
 
     public static void main(String[] args){
         launch(args);
@@ -31,15 +33,31 @@ public class Client extends Application {
             System.out.println("Trying to connect to: "+serverHost+":"+serverPort);
             Thread.sleep(1000); // waiting for network communicating.
 
-            //TODO: switch the panel to the chat layout
             ServerThread serverThread = new ServerThread(socket, userName);
+            Label userLabel = new Label();
+            userLabel.setMinWidth(100);
+            ScrollPane userPane = new ScrollPane(userLabel);
+            Label chatLabel = new Label();
+            chatLabel.setMinWidth(200);
+            ScrollPane chatPane = new ScrollPane(chatLabel);
+            HBox chatBox = new HBox(chatPane,userPane);
+            TextField input = new TextField();
+            input.setMinWidth(200);
+            Button sendInput = new Button("Send");
+            sendInput.setOnAction(event -> {
+                chatLabel.setText(chatLabel.getText()+"\n"+userName+" > "+input.getText());
+                serverThread.addNextMessage(input.getText());
+                input.setText("");
+            });
+            HBox inputBox = new HBox(input,sendInput);
+            VBox chatVBox = new VBox(chatBox,inputBox);
+            chatVBox.setSpacing(5);
+            chatVBox.setPadding(new Insets(10, 50, 50, 50));
+            Scene chatScene = new Scene(chatVBox, 400,400);
+            stage.setScene(chatScene);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
-            while(serverAccessThread.isAlive()){
-                if(scan.hasNextLine()){
-                    serverThread.addNextMessage(scan.nextLine());
-                }
-            }
+
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
             ex.printStackTrace();
@@ -50,6 +68,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        stage = primaryStage;
         Scanner scan = new Scanner(System.in);
         VBox loginVBox = new VBox();
         loginVBox.setSpacing(5);
@@ -82,8 +101,8 @@ public class Client extends Application {
         });
         loginVBox.getChildren().addAll(nameBox,ipBox,portBox,connect,error);
         Scene connectScene = new Scene(loginVBox,400,400);
-        primaryStage.setTitle("Chat Client");
-        primaryStage.setScene(connectScene);
-        primaryStage.show();
+        stage.setTitle("Chat Client");
+        stage.setScene(connectScene);
+        stage.show();
     }
 }
