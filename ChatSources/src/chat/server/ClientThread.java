@@ -33,6 +33,7 @@ public class ClientThread implements Runnable {
                     for(ClientThread thatClient : server.getClients()){
                         PrintWriter thatClientOut = thatClient.getWriter();
                         if(thatClientOut != null){
+                            //hier muss auf das gui geschrieben werden
                             thatClientOut.write(input + "\r\n");
                             thatClientOut.flush();
                         }

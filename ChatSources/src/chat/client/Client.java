@@ -3,10 +3,7 @@ package chat.client;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -43,8 +40,10 @@ public class Client extends Application {
             ScrollPane chatPane = new ScrollPane(chatLabel);
             chatPane.setMinSize(200,200);
             HBox chatBox = new HBox(chatPane,userPane);
-            TextField input = new TextField();
+            TextArea input = new TextArea();
             input.setMinWidth(200);
+            input.setMaxWidth(200);
+            input.setMaxHeight(100);
             Button sendInput = new Button("Send");
             sendInput.setOnAction(event -> {
                 serverThread.addNextMessage(input.getText());
@@ -58,6 +57,7 @@ public class Client extends Application {
             stage.setScene(chatScene);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
+            stage.setOnCloseRequest(event -> serverAccessThread.stop());
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
             ex.printStackTrace();
