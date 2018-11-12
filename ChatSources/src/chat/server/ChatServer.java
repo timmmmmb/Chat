@@ -9,7 +9,6 @@ import java.util.List;
 public class ChatServer {
 
     private static final int portNumber = 4444;
-
     private int serverPort;
     private List<ClientThread> clients;
 
@@ -37,7 +36,6 @@ public class ChatServer {
             System.exit(1);
         }
     }
-
 
     private void acceptClients(ServerSocket serverSocket){
 

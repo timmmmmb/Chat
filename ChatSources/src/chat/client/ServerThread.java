@@ -1,20 +1,26 @@
 package chat.client;
 
+import javafx.application.Platform;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class ServerThread implements Runnable {
+    private final Client client;
     private Socket socket;
     private String userName;
     private final LinkedList<String> messagesToSend;
     private boolean hasMessages = false;
 
-    ServerThread(Socket socket, String userName){
+    ServerThread(Socket socket, String userName, Client client){
         this.socket = socket;
         this.userName = userName;
+        this.client = client;
         messagesToSend = new LinkedList<>();
+        messagesToSend.add("joined the server");
+        hasMessages = true;
     }
 
     void addNextMessage(String message){
@@ -49,6 +55,7 @@ public class ServerThread implements Runnable {
                         nextSend = messagesToSend.pop();
                         hasMessages = !messagesToSend.isEmpty();
                     }
+                    Platform.runLater(() -> client.chatLabel.setText(client.chatLabel.getText()+("".equals(client.chatLabel.getText())?"":"\n")+userName + " > " + nextSend));
                     serverOut.println(userName + " > " + nextSend);
                     serverOut.flush();
                 }

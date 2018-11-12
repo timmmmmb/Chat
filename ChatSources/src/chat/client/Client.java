@@ -21,6 +21,7 @@ public class Client extends Application {
     private String serverHost;
     private int serverPort;
     private Stage stage;
+    Label chatLabel = new Label();
 
     public static void main(String[] args){
         launch(args);
@@ -31,14 +32,13 @@ public class Client extends Application {
             Socket socket = new Socket(serverHost, serverPort);
             System.out.println("Trying to connect to: "+serverHost+":"+serverPort);
             Thread.sleep(1000); // waiting for network communicating.
-            ServerThread serverThread = new ServerThread(socket, userName);
+            ServerThread serverThread = new ServerThread(socket, userName, this);
 
             //create the gui for the chat
             Label userLabel = new Label();
             userLabel.setMinWidth(100);
             ScrollPane userPane = new ScrollPane(userLabel);
             userPane.setMinSize(100,200);
-            Label chatLabel = new Label();
             chatLabel.setMinWidth(200);
             ScrollPane chatPane = new ScrollPane(chatLabel);
             chatPane.setMinSize(200,200);
@@ -47,7 +47,6 @@ public class Client extends Application {
             input.setMinWidth(200);
             Button sendInput = new Button("Send");
             sendInput.setOnAction(event -> {
-                chatLabel.setText(chatLabel.getText()+"\n"+userName+" > "+input.getText());
                 serverThread.addNextMessage(input.getText());
                 input.setText("");
             });
@@ -57,7 +56,6 @@ public class Client extends Application {
             chatVBox.setPadding(new Insets(10, 50, 50, 50));
             Scene chatScene = new Scene(chatVBox, 400,400);
             stage.setScene(chatScene);
-
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
         }catch(IOException ex){
@@ -79,11 +77,11 @@ public class Client extends Application {
         Label nameLabel = new Label("Name: ");
         nameLabel.setMinWidth(100);
         HBox nameBox = new HBox(nameLabel,nameField);
-        TextField ipField = new TextField("");
+        TextField ipField = new TextField("147.87.17.1");
         Label ipLabel = new Label("IP-Adress: ");
         ipLabel.setMinWidth(100);
         HBox ipBox = new HBox(ipLabel,ipField);
-        TextField portField = new TextField("");
+        TextField portField = new TextField("4444");
         Label portLabel = new Label("Port: ");
         portLabel.setMinWidth(100);
         HBox portBox = new HBox(portLabel,portField);
