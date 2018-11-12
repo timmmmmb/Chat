@@ -19,6 +19,7 @@ public class Client extends Application {
     private int serverPort;
     private Stage stage;
     Label chatLabel = new Label();
+    Label userLabel = new Label();
 
     public static void main(String[] args){
         launch(args);
@@ -32,7 +33,6 @@ public class Client extends Application {
             ServerThread serverThread = new ServerThread(socket, userName, this);
 
             //create the gui for the chat
-            Label userLabel = new Label();
             userLabel.setMinWidth(100);
             ScrollPane userPane = new ScrollPane(userLabel);
             userPane.setMinSize(100,200);
@@ -57,7 +57,9 @@ public class Client extends Application {
             stage.setScene(chatScene);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
-            stage.setOnCloseRequest(event -> serverAccessThread.stop());
+            stage.setOnCloseRequest(event -> {
+                serverThread.addNextMessage("left the server");
+            });
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
             ex.printStackTrace();
