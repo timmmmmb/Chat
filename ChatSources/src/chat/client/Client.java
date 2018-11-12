@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client extends Application {
 
@@ -27,19 +26,22 @@ public class Client extends Application {
         launch(args);
     }
 
-    private void startClient(Scanner scan){
+    private void startClient(){
         try{
             Socket socket = new Socket(serverHost, serverPort);
             System.out.println("Trying to connect to: "+serverHost+":"+serverPort);
             Thread.sleep(1000); // waiting for network communicating.
-
             ServerThread serverThread = new ServerThread(socket, userName);
+
+            //create the gui for the chat
             Label userLabel = new Label();
             userLabel.setMinWidth(100);
             ScrollPane userPane = new ScrollPane(userLabel);
+            userPane.setMinSize(100,200);
             Label chatLabel = new Label();
             chatLabel.setMinWidth(200);
             ScrollPane chatPane = new ScrollPane(chatLabel);
+            chatPane.setMinSize(200,200);
             HBox chatBox = new HBox(chatPane,userPane);
             TextField input = new TextField();
             input.setMinWidth(200);
@@ -55,13 +57,9 @@ public class Client extends Application {
             chatVBox.setPadding(new Insets(10, 50, 50, 50));
             Scene chatScene = new Scene(chatVBox, 400,400);
             stage.setScene(chatScene);
+
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
-            while(serverAccessThread.isAlive()){
-                if(scan.hasNextLine()){
-                    serverThread.addNextMessage(scan.nextLine());
-                }
-            }
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
             ex.printStackTrace();
@@ -72,8 +70,8 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        //create the gui to connect to the server
         stage = primaryStage;
-        Scanner scan = new Scanner(System.in);
         VBox loginVBox = new VBox();
         loginVBox.setSpacing(5);
         loginVBox.setPadding(new Insets(10, 50, 50, 50));
@@ -89,7 +87,6 @@ public class Client extends Application {
         Label portLabel = new Label("Port: ");
         portLabel.setMinWidth(100);
         HBox portBox = new HBox(portLabel,portField);
-
         Button connect = new Button("Connect");
         Label error = new Label();
         error.setTextFill(Color.web("#FF0000"));
@@ -100,7 +97,7 @@ public class Client extends Application {
                 this.userName = nameField.getText();
                 this.serverHost = ipField.getText();
                 this.serverPort = Integer.parseInt(portField.getText());
-                startClient(scan);
+                startClient();
             }
         });
         loginVBox.getChildren().addAll(nameBox,ipBox,portBox,connect,error);
