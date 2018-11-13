@@ -64,20 +64,21 @@ public class ServerThread implements Runnable {
                     String output = out.toString().substring(lastRead.length());
                     Platform.runLater(() -> {
                         if("All connected Users".equals(output.substring(0,output.indexOf(">")-1))){
-                            String userlist = output.replace(userName+" > joined the server","");
+                            String userlist = output.replace(userName+" > joined the server\r\n","");
+                            userlist = userlist.replace(" ","");
                             for(String username:userlist.substring(userlist.indexOf(">")+1).split(",")){
                                 if("".equals(username)||"\n".equals(username)){
                                     continue;
                                 }
-                                client.userLabel.setText(client.userLabel.getText()+username+"\n");
+                                client.userLabel.setText(client.userLabel.getText()+" "+username+"\n");
                             }
                         }else{
                             client.chatLabel.setText(client.chatLabel.getText()+output);
                             String username = output.substring(0,output.indexOf(">")-1);
                             if(output.contains("joined the server")&&!username.equals(this.userName)){
-                                client.userLabel.setText(client.userLabel.getText()+username+"\n");
+                                client.userLabel.setText(client.userLabel.getText()+" "+username+"\n");
                             }else if(output.contains("left the server")){
-                                client.userLabel.setText(client.userLabel.getText().replaceAll(username+"\n",""));
+                                client.userLabel.setText(client.userLabel.getText().replaceAll(" "+username+"\n",""));
                                 if(username.equals(this.userName)){
                                     try {
                                         socket.close();

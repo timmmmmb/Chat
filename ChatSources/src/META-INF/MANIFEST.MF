@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
+Class-Path: chat.client
 Main-Class: chat.client.Client
 
