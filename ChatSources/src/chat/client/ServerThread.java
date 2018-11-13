@@ -63,17 +63,27 @@ public class ServerThread implements Runnable {
                 if(!lastRead.equals(out.toString())){
                     String output = out.toString().substring(lastRead.length());
                     Platform.runLater(() -> {
-                        client.chatLabel.setText(client.chatLabel.getText()+output);
-                        if(output.contains("joined the server")){
-                            client.userLabel.setText(client.userLabel.getText()+output.substring(0,output.indexOf(">")-1)+"\n");
-                        }else if(output.contains("left the server")){
+                        if("All connected Users".equals(output.substring(0,output.indexOf(">")-1))){
+                            String userlist = output.replace(userName+" > joined the server","");
+                            for(String username:userlist.substring(userlist.indexOf(">")+1).split(",")){
+                                if("".equals(username)||"\n".equals(username)){
+                                    continue;
+                                }
+                                client.userLabel.setText(client.userLabel.getText()+username+"\n");
+                            }
+                        }else{
+                            client.chatLabel.setText(client.chatLabel.getText()+output);
                             String username = output.substring(0,output.indexOf(">")-1);
-                            client.userLabel.setText(client.userLabel.getText().replaceAll(username+"\n",""));
-                            if(username.equals(this.userName)){
-                                try {
-                                    socket.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                            if(output.contains("joined the server")&&!username.equals(this.userName)){
+                                client.userLabel.setText(client.userLabel.getText()+username+"\n");
+                            }else if(output.contains("left the server")){
+                                client.userLabel.setText(client.userLabel.getText().replaceAll(username+"\n",""));
+                                if(username.equals(this.userName)){
+                                    try {
+                                        socket.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         }

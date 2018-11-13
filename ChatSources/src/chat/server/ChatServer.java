@@ -25,6 +25,10 @@ public class ChatServer {
         return clients;
     }
 
+    void removeClient(ClientThread client){
+        clients.remove(client);
+    }
+
     private void startServer(){
         clients = new ArrayList<>();
         ServerSocket serverSocket;
@@ -53,4 +57,6 @@ public class ChatServer {
             }
         }
     }
+
+
 }

@@ -59,6 +59,12 @@ public class Client extends Application {
             serverAccessThread.start();
             stage.setOnCloseRequest(event -> {
                 serverThread.addNextMessage("left the server");
+                try {
+                    Thread.sleep(1000); // waiting for network communicating.
+                    serverAccessThread.stop();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }catch(IOException ex){
             System.err.println("Fatal Connection error!");
